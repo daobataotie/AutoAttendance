@@ -67,7 +67,7 @@
             this.btn_InportExcel1.Name = "btn_InportExcel1";
             this.btn_InportExcel1.Size = new System.Drawing.Size(24, 23);
             this.btn_InportExcel1.TabIndex = 4;
-            this.btn_InportExcel1.Text = "九";
+            this.btn_InportExcel1.Text = "十";
             this.btn_InportExcel1.UseVisualStyleBackColor = true;
             this.btn_InportExcel1.Click += new System.EventHandler(this.btn_InportExcel1_Click);
             // 
@@ -169,7 +169,7 @@
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(107, 12);
             this.label6.TabIndex = 14;
-            this.label6.Text = "十楼报表Sheet名：";
+            this.label6.Text = "九楼报表Sheet名：";
             // 
             // txt_SheetName1
             // 
@@ -185,7 +185,7 @@
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(107, 12);
             this.label5.TabIndex = 12;
-            this.label5.Text = "九楼报表Sheet名：";
+            this.label5.Text = "十楼报表Sheet名：";
             // 
             // cob_Month
             // 
@@ -237,7 +237,7 @@
             this.btn_InportExcel2.Name = "btn_InportExcel2";
             this.btn_InportExcel2.Size = new System.Drawing.Size(24, 23);
             this.btn_InportExcel2.TabIndex = 16;
-            this.btn_InportExcel2.Text = "十";
+            this.btn_InportExcel2.Text = "九";
             this.btn_InportExcel2.UseVisualStyleBackColor = true;
             this.btn_InportExcel2.Click += new System.EventHandler(this.btn_InportExcel2_Click);
             // 
