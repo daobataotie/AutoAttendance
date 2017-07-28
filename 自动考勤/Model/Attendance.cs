@@ -11,69 +11,87 @@ namespace AutoAttendance.Model
         public Attendance(string date, string record, int i)
         {
             this.Date = date;
-            
+            DateTime beginDT = DateTime.Parse(Common.Year + "-" + Common.Month + "-" + date + " " + Common.BeginTime);
+
             if (!string.IsNullOrEmpty(record))
             {
-                if (i == 1)
+                string[] times;
+                if (i == 1)       //1 是十楼 ， 2 是九楼
                 {
-                    string[] times = record.Split(' ').Where(R => !string.IsNullOrEmpty(R)).ToArray();
-                    if (times.Length > 0)
-                    {
-                        if (times.Length == 1)
-                        {
-                            DateTime dt = DateTime.Parse(Common.Year + "-" + Common.Month + "-" + date + " " + times[0]);
-                            DateTime beginDT = DateTime.Parse(Common.Year + "-" + Common.Month + "-" + date + " " + Common.BeginTime);
-                            if (dt > beginDT)
-                            {
-                                if (dt.Hour - beginDT.Hour > 4)
-                                    _afternoon = dt;
-                                else
-                                    _morning = dt;
-                            }
-                            else
-                            {
-                                _morning = dt;
-                            }
-                        }
-                        else if (times.Length > 1)
-                        {
-                            _morning = DateTime.Parse(Common.Year + "-" + Common.Month + "-" + date + " " + times[0]);
-                            _afternoon = DateTime.Parse(Common.Year + "-" + Common.Month + "-" + date + " " + times[times.Length - 1]);
-                        }
-                    }
-                    else
-                        NoAttendance = true;
+                    times = record.Split(' ').Where(R => !string.IsNullOrEmpty(R)).ToArray();
                 }
                 else
+                    times = record.Split('\n').Where(R => !string.IsNullOrEmpty(R)).ToArray();
+
+                if (times.Length > 0)
                 {
-                    string[] times = record.Split('\n').Where(R => !string.IsNullOrEmpty(R)).ToArray();
-                    if (times.Length > 0)
+                    if (times.Length == 1)
                     {
-                        if (times.Length == 1)
+                        DateTime dt = DateTime.Parse(Common.Year + "-" + Common.Month + "-" + date + " " + times[0]);
+
+                        if (dt > beginDT)
                         {
-                            DateTime dt = DateTime.Parse(Common.Year + "-" + Common.Month + "-" + date + " " + times[0]);
-                            DateTime beginDT = DateTime.Parse(Common.Year + "-" + Common.Month + "-" + date + " " + Common.BeginTime);
-                            if (dt > beginDT)
-                            {
-                                if (dt.Hour - beginDT.Hour > 4)
-                                    _afternoon = dt;
-                                else
-                                    _morning = dt;
-                            }
+                            if (dt.Hour - beginDT.Hour > 4)
+                                _afternoon = dt;
                             else
-                            {
                                 _morning = dt;
-                            }
                         }
-                        else if (times.Length > 1)
+                        else
                         {
-                            _morning = DateTime.Parse(Common.Year + "-" + Common.Month + "-" + date + " " + times[0]);
-                            _afternoon = DateTime.Parse(Common.Year + "-" + Common.Month + "-" + date + " " + times[times.Length - 1]);
+                            _morning = dt;
                         }
                     }
-                    else
-                        NoAttendance = true;
+                    else if (times.Length > 1)
+                    {
+                        _morning = DateTime.Parse(Common.Year + "-" + Common.Month + "-" + date + " " + times[0]);
+                        _afternoon = DateTime.Parse(Common.Year + "-" + Common.Month + "-" + date + " " + times[times.Length - 1]);
+
+                        if (_morning.Value > beginDT)
+                        {
+                            if (_morning.Value.Hour - beginDT.Hour > 4)
+                                _morning = null;
+                        }
+                    }
                 }
+                else
+                    NoAttendance = true;
+                //}
+                //else
+                //{
+                //    string[] times = record.Split('\n').Where(R => !string.IsNullOrEmpty(R)).ToArray();
+                //    if (times.Length > 0)
+                //    {
+                //        if (times.Length == 1)
+                //        {
+                //            DateTime dt = DateTime.Parse(Common.Year + "-" + Common.Month + "-" + date + " " + times[0]);
+
+                //            if (dt > beginDT)
+                //            {
+                //                if (dt.Hour - beginDT.Hour > 4)
+                //                    _afternoon = dt;
+                //                else
+                //                    _morning = dt;
+                //            }
+                //            else
+                //            {
+                //                _morning = dt;
+                //            }
+                //        }
+                //        else if (times.Length > 1)
+                //        {
+                //            _morning = DateTime.Parse(Common.Year + "-" + Common.Month + "-" + date + " " + times[0]);
+                //            _afternoon = DateTime.Parse(Common.Year + "-" + Common.Month + "-" + date + " " + times[times.Length - 1]);
+
+                //            if (_morning.Value > beginDT)
+                //            {
+                //                if (_morning.Value.Hour - beginDT.Hour > 4)
+                //                    _morning = null;
+                //            }
+                //        }
+                //    }
+                //    else
+                //        NoAttendance = true;
+                //}
             }
             else
                 NoAttendance = true;

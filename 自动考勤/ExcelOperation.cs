@@ -251,6 +251,7 @@ namespace AutoAttendance
 
                                     if (emp == null)
                                         break;
+
                                     continue;
                                 }
 
