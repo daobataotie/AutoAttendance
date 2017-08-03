@@ -278,7 +278,12 @@ namespace AutoAttendance
                                                 break;
 
                                             if (dt.HasValue)
-                                                excelHelper.SetCellValue(item, i, j, "√");
+                                            {
+                                                if (attendance.IsLate && morningOrAfternoon == "上午")
+                                                    excelHelper.SetCellValue(item, i, j, "√", Common.Color.Red);
+                                                else
+                                                    excelHelper.SetCellValue(item, i, j, "√");
+                                            }
                                             //else
                                             //    excelHelper.SetCellValue(item, i, j, "√", Common.Color.Red);
                                         }
@@ -287,6 +292,8 @@ namespace AutoAttendance
                                     {
                                         excelHelper.SetCellValue(item, i, j, emp.NormalDays == 0 ? "" : emp.NormalDays.ToString());
                                     }
+                                    else if (j == 3 + 36)
+                                        excelHelper.SetCellValue(item, i, j, emp.LateTime == 0 ? "" : emp.LateTime.ToString());
                                 }
                                 else
                                     break;

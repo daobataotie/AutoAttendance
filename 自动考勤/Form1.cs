@@ -17,6 +17,7 @@ namespace AutoAttendance
         public Form1()
         {
             InitializeComponent();
+            this.StartPosition = FormStartPosition.CenterScreen;
 
             InitializeData();
         }
@@ -56,20 +57,28 @@ namespace AutoAttendance
 
         private void btn_InportExcel1_Click(object sender, EventArgs e)
         {
+            this.txt_ExcelPath1.Text = "";
+
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "Excel文件|*.xls;*.xlsx";
-            ofd.Multiselect = false;
+            ofd.Multiselect = true;
             ofd.Title = "请选择数据源";
 
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                this.txt_ExcelPath1.Text = ofd.FileName;
+                foreach (var item in ofd.FileNames)
+                {
+                    this.txt_ExcelPath1.Text += item + ",";
+                }
+                this.txt_ExcelPath1.Text = this.txt_ExcelPath1.Text.TrimEnd(',');
                 this.txt_ExcelPath1.SelectionStart = this.txt_ExcelPath1.Text.Length;
             }
         }
 
         private void btn_InportExcel2_Click(object sender, EventArgs e)
         {
+            this.txt_ExcelPath2.Text = "";
+
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "Excel文件|*.xls;*.xlsx";
             ofd.Multiselect = false;
@@ -105,7 +114,7 @@ namespace AutoAttendance
         {
             try
             {
-                if (string.IsNullOrEmpty(this.txt_ExcelPath1.Text) || string.IsNullOrEmpty(this.txt_ExcelPath2.Text))
+                if (string.IsNullOrEmpty(this.txt_ExcelPath1.Text) && string.IsNullOrEmpty(this.txt_ExcelPath2.Text))
                 {
                     MessageBox.Show("请先导入数据源！", "提示", MessageBoxButtons.OK);
                     return;
@@ -118,16 +127,24 @@ namespace AutoAttendance
 
                 ExcelOperation eo = new ExcelOperation();
 
-                List<Model.Employee> list = null;
-                List<Model.Employee> list2 = null;
+                List<Model.Employee> list10 = new List<Model.Employee>();
+                List<Model.Employee> list9 = new List<Model.Employee>();
 
-                list = eo.GetExcelDate_Read1(this.txt_ExcelPath1.Text);
-                list2 = eo.GetExcelDate_Read2(this.txt_ExcelPath2.Text);
+                if (!string.IsNullOrEmpty(this.txt_ExcelPath1.Text))
+                {
+                    foreach (var item in this.txt_ExcelPath1.Text.Split(','))
+                    {
+                        List<Model.Employee> list = eo.GetExcelDate_Read1(item);
+                        list10 = list10.Union(list).ToList();
+                    }
+                }
+                if (!string.IsNullOrEmpty(this.txt_ExcelPath2.Text))
+                    list9 = eo.GetExcelDate_Read2(this.txt_ExcelPath2.Text);
 
-                List<Model.Employee> empList = list.Union(list2).ToList();
+                List<Model.Employee> empList = list10.Union(list9).ToList();
                 var weekMapping = Common.WeekMapping;
 
-                string outputFileName = Path.Combine(Path.GetDirectoryName(this.txt_ExcelPath1.Text), $"{Common.Month}月份考勤总表.xlsx");
+                string outputFileName = Path.Combine(Path.GetDirectoryName(string.IsNullOrEmpty(this.txt_ExcelPath2.Text) ? this.txt_ExcelPath1.Text.Split(',')[0] : this.txt_ExcelPath2.Text), $"{Common.Month}月份考勤总表.xlsx");
                 File.Copy(Common.TemplateFileName, outputFileName);
                 eo.WriteExcel(outputFileName, weekMapping, empList);
 

@@ -12,6 +12,7 @@ namespace AutoAttendance.Model
         {
             this.Date = date;
             DateTime beginDT = DateTime.Parse(Common.Year + "-" + Common.Month + "-" + date + " " + Common.BeginTime);
+            DateTime endDT = DateTime.Parse(Common.Year + "-" + Common.Month + "-" + date + " " + Common.EndTime);
 
             if (!string.IsNullOrEmpty(record))
             {
@@ -29,12 +30,21 @@ namespace AutoAttendance.Model
                     {
                         DateTime dt = DateTime.Parse(Common.Year + "-" + Common.Month + "-" + date + " " + times[0]);
 
+                        if (dt.Hour >= 12 && dt.Hour <= 15)
+                        {
+                            NoAttendance = true;
+                            return;
+                        }
+
                         if (dt > beginDT)
                         {
                             if (dt.Hour - beginDT.Hour > 4)
                                 _afternoon = dt;
                             else
+                            {
                                 _morning = dt;
+                                IsLate = true;
+                            }
                         }
                         else
                         {
@@ -50,48 +60,18 @@ namespace AutoAttendance.Model
                         {
                             if (_morning.Value.Hour - beginDT.Hour > 4)
                                 _morning = null;
+                            else
+                                IsLate = true;
+                        }
+                        if (_afternoon.Value < endDT)
+                        {
+                            if (endDT.Hour - _afternoon.Value.Hour > 4)
+                                _afternoon = null;
                         }
                     }
                 }
                 else
                     NoAttendance = true;
-                //}
-                //else
-                //{
-                //    string[] times = record.Split('\n').Where(R => !string.IsNullOrEmpty(R)).ToArray();
-                //    if (times.Length > 0)
-                //    {
-                //        if (times.Length == 1)
-                //        {
-                //            DateTime dt = DateTime.Parse(Common.Year + "-" + Common.Month + "-" + date + " " + times[0]);
-
-                //            if (dt > beginDT)
-                //            {
-                //                if (dt.Hour - beginDT.Hour > 4)
-                //                    _afternoon = dt;
-                //                else
-                //                    _morning = dt;
-                //            }
-                //            else
-                //            {
-                //                _morning = dt;
-                //            }
-                //        }
-                //        else if (times.Length > 1)
-                //        {
-                //            _morning = DateTime.Parse(Common.Year + "-" + Common.Month + "-" + date + " " + times[0]);
-                //            _afternoon = DateTime.Parse(Common.Year + "-" + Common.Month + "-" + date + " " + times[times.Length - 1]);
-
-                //            if (_morning.Value > beginDT)
-                //            {
-                //                if (_morning.Value.Hour - beginDT.Hour > 4)
-                //                    _morning = null;
-                //            }
-                //        }
-                //    }
-                //    else
-                //        NoAttendance = true;
-                //}
             }
             else
                 NoAttendance = true;
@@ -161,6 +141,8 @@ namespace AutoAttendance.Model
                 return _normalDay;
             }
         }
+
+        public bool IsLate { get; set; } = false;
 
     }
 }

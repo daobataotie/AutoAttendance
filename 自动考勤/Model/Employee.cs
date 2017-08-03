@@ -173,5 +173,18 @@ namespace AutoAttendance.Model
                     return 0;
             }
         }
+
+        public int LateTime
+        {
+            get
+            {
+                if (AttendanceList != null && AttendanceList.Count > 0)
+                {
+                    return AttendanceList.Count(a => a.IsLate);
+                }
+                else
+                    return 0;
+            }
+        }
     }
 }
