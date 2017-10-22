@@ -90,7 +90,8 @@
             this.cob_BeginTime.Items.AddRange(new object[] {
             "8:00",
             "8:30",
-            "9:00"});
+            "9:00",
+            "16:00"});
             this.cob_BeginTime.Location = new System.Drawing.Point(77, 24);
             this.cob_BeginTime.Name = "cob_BeginTime";
             this.cob_BeginTime.Size = new System.Drawing.Size(73, 20);
@@ -101,9 +102,11 @@
             this.cob_EndTime.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cob_EndTime.FormattingEnabled = true;
             this.cob_EndTime.Items.AddRange(new object[] {
+            "16:00",
             "17:30",
             "18:00",
-            "18:30"});
+            "18:30",
+            "00:00"});
             this.cob_EndTime.Location = new System.Drawing.Point(259, 24);
             this.cob_EndTime.Name = "cob_EndTime";
             this.cob_EndTime.Size = new System.Drawing.Size(73, 20);
